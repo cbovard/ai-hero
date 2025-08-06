@@ -15,12 +15,21 @@ export const ChatPage = ({ userName, isAuthenticated }: ChatProps) => {
   const [showSignInModal, setShowSignInModal] = useState(false);
   const { messages, input, handleInputChange, handleSubmit, isLoading } =
     useChat({
-      onError: (error) => {
+      onError: (error: any) => {
+        console.error("Chat error:", error);
         if (error.status === 401) {
           setShowSignInModal(true);
         }
       },
     });
+
+  console.log(messages);
+
+  console.log("Chat state:", {
+    messagesCount: messages.length,
+    isLoading,
+    input,
+  });
 
   const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     if (!isAuthenticated) {
@@ -28,7 +37,8 @@ export const ChatPage = ({ userName, isAuthenticated }: ChatProps) => {
       setShowSignInModal(true);
       return;
     }
-    // Let the default useChat handleSubmit work
+    // Call the useChat handleSubmit
+    handleSubmit(e);
   };
 
   return (
